@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>סיכום שבועי כיתה ד'1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #f1f5f9;
+      font-family: 'Assistant', sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 20px 10px;
+      color: #1e293b;
+    }
+
+    .poster {
+      background: #ffffff;
+      width: 100%;
+      max-width: 760px;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+    }
+
+    /* כותרת */
+    .hero {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: white;
+      text-align: center;
+      padding: 26px 18px;
+    }
+    .hero h1 {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    /* גלריית 5 תמונות */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      padding: 16px 18px 8px;
+    }
+    .gallery-item {
+      height: 125px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      border: 2px solid #ffffff;
+      background: #e2e8f0;
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* מעטפת התוכן */
+    .content-flow {
+      padding: 10px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .intro-card {
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 14px 18px;
+      border: 1px solid #e2e8f0;
+      border-right: 4px solid #0284c7;
+      font-size: 15px;
+      line-height: 1.55;
+      color: #334155;
+    }
+
+    .congrats-pill {
+      background: #fdf2f8;
+      border: 1px dashed #f472b6;
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-size: 14px;
+      color: #9d174d;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* גריד קוביות */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .card-title {
+      font-size: 15.5px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-title.blue { color: #0284c7; }
+    .card-title.orange { color: #ea580c; }
+    .card-title.emerald { color: #059669; }
+    .card-title.purple { color: #7c3aed; }
+
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .bullet-list li {
+      font-size: 13.5px;
+      line-height: 1.45;
+      position: relative;
+      padding-right: 14px;
+      color: #475569;
+    }
+    .bullet-list li::before {
+      content: "•";
+      position: absolute;
+      right: 0;
+      font-weight: 800;
+      color: #94a3b8;
+    }
+
+    .signature-card {
+      text-align: center;
+      padding: 14px;
+      background: #e0f2fe;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #0369a1;
+      line-height: 1.5;
+    }
+
+    /* התאמה למובייל */
+    @media (max-width: 600px) {
+      .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .gallery-item:nth-child(4),
+      .gallery-item:nth-child(5) {
+        grid-column: span 1;
+      }
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .hero h1 {
+        font-size: 24px;
+      }
+      .gallery-item {
+        height: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="poster">
+    <div class="hero">
+      <h1>סיכום שבועי כיתה ד'1 🎒</h1>
+    </div>
+
+    <!-- גלריית 5 תמונות מתוך התיקייה בסיומת jpeg -->
+    <div class="gallery-grid">
+      <div class="gallery-item"><img src="1.jpeg" alt="פעילות 1"></div>
+      <div class="gallery-item"><img src="2.jpeg" alt="פעילות 2"></div>
+      <div class="gallery-item"><img src="3.jpeg" alt="פעילות 3"></div>
+      <div class="gallery-item"><img src="4.jpeg" alt="פעילות 4"></div>
+      <div class="gallery-item"><img src="5.jpeg" alt="פעילות 5"></div>
+    </div>
+
+    <div class="content-flow">
+      <!-- פתיח -->
+      <div class="intro-card">
+        שלום לכל ההורים היקרים! איזו התרגשות לפתוח יחד את שנת הלימודים תשפ״ז. עברו עלינו שלושה ימי פתיחה מלאים בעשייה, התחלות חדשות והיכרות מעמיקה עם הילדים המקסימים. שמחתי מאוד להכיר את כולם, ומצפה לנו שנה פורייה ומלמדת יחד!
+      </div>
+
+      <!-- מזל טוב לדניאל -->
+      <div class="congrats-pill">
+        <span>🍼</span>
+        <span>שולחים ברכת מזל טוב חמה לדניאל היקרה להולדת התינוק/ת בשעה טובה, ומאחלים חופשת לידה רגועה, בריאה ומלאת שמחה!</span>
+      </div>
+
+      <!-- גריד 1: פעילויות ולוח זמנים -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title blue">
+            <span>✨</span>
+            <span>מה עשינו בימי הפתיחה?</span>
+          </div>
+          <ul class="bullet-list">
+            <li>פתחנו בטקס בית-ספרי חגיגי ומרגש.</li>
+            <li>שיתפנו בחוויות מהחופש הגדול ושיחקנו ב"התלמיד במסכה".</li>
+            <li>עבדנו בקבוצות ופיצחנו משימות מאתגרות של קופסת בריחה.</li>
+            <li>ביקרנו לראשונה בחדר המחשבים ולמדנו עם המורה איתי.</li>
+            <li>קבענו יחד את כללי ההתנהגות והשיח בכיתה.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title orange">
+            <span>📅</span>
+            <span>לוח זמנים ושגרה</span>
+          </div>
+          <ul class="bullet-list">
+            <li><strong>אסיפת הורים:</strong> תתקיים ביום שני, <strong>14.9.26 בשעה 18:00</strong>.</li>
+            <li><strong>מערכת שעות:</strong> נשלחה אליכם. אנא שימו לב לימי חנ"ג (הגעה בתלבושת ספורט ובנעלי ספורט).</li>
+            <li><strong>איחורים וחיסורים:</strong> במידה וילדכם מאחר או נעדר, אנא עדכנו אותי בהקדם.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- גריד 2: ביטחון וטפסים -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title emerald">
+            <span>🛡️</span>
+            <span>ביטחון והגעה לבית הספר</span>
+          </div>
+          <ul class="bullet-list">
+            <li><strong>הגעה עצמאית:</strong> כניסה ברכב אך ורק למפרץ "נשק וסע" על פי השילוט.</li>
+            <li><strong>כניסה לשטח ביה"ס:</strong> מתאפשרת אך ורק בתיאום מראש מולי ובאישור ההנהלה.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title purple">
+            <span>📌</span>
+            <span>טפסים מקוונים למילוי</span>
+          </div>
+          <ul class="bullet-list">
+            <li>הצהרת בריאות (בפורטל הורים).</li>
+            <li>אישור וחתימה על תקנון ביה"ס.</li>
+            <li>אישור צילום.</li>
+            <li>הסדרת הרכישה המרוכזת (שירות לתלמיד).</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- יצירת קשר -->
+      <div class="card" style="border-right: 4px solid #0284c7;">
+        <div class="card-title blue" style="margin-bottom: 6px;">
+          <span>📞</span>
+          <span>יצירת קשר ושעות מענה</span>
+        </div>
+        <ul class="bullet-list">
+          <li><strong>שיחות טלפון:</strong> בימי הפעילות מתום יום הלימודים ועד השעה 16:00.</li>
+          <li><strong>וואטסאפ:</strong> ניתן לכתוב תמיד ואחזור אליכם כשאפנה.</li>
+          <li><strong>ימי רביעי:</strong> אינני נוכחת בבית הספר. לנושאים דחופים ניתן לפנות למורה המלמד בכיתה או לכתוב לי ואטפל ביום שלמחרת.</li>
+        </ul>
+      </div>
+
+      <!-- חתימה -->
+      <div class="signature-card">
+        מאחלת לכולנו סוף שבוע נעים, רגוע ושנת לימודים מוצלחת ומשמחת!<br>
+        שלכם, סיון
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
