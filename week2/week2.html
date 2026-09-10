@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>סיכום שבועי כיתה ד'1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #f1f5f9;
+      font-family: 'Assistant', sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 20px 10px;
+      color: #1e293b;
+    }
+
+    .poster {
+      background: #ffffff;
+      width: 100%;
+      max-width: 760px;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+    }
+
+    /* כותרת ראשית */
+    .hero {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: white;
+      text-align: center;
+      padding: 28px 18px;
+    }
+    .hero h1 {
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    /* גלריית 7 תמונות */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 18px 20px 10px;
+    }
+    .gallery-item {
+      height: 120px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      border: 2px solid #ffffff;
+      background: #e2e8f0;
+      cursor: pointer;
+      position: relative;
+    }
+    .gallery-item:last-child {
+      grid-column: span 2;
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.25s ease;
+    }
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
+
+    /* חלון הגדלת תמונה (Lightbox) */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.88);
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      backdrop-filter: blur(4px);
+      cursor: pointer;
+    }
+    .modal.active {
+      display: flex;
+    }
+    .modal-content {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 14px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+      object-fit: contain;
+      cursor: default;
+    }
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 34px;
+      color: white;
+      cursor: pointer;
+      font-weight: 800;
+      line-height: 1;
+      user-select: none;
+    }
+
+    /* גוף התוכן */
+    .content-flow {
+      padding: 12px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .intro-card {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 16px 20px;
+      border: 1px solid #e2e8f0;
+      border-right: 5px solid #0284c7;
+      font-size: 17px;
+      line-height: 1.6;
+      color: #334155;
+    }
+
+    .celebration-card {
+      background: #fdf2f8;
+      border: 1.5px dashed #f472b6;
+      border-radius: 16px;
+      padding: 14px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 16px;
+      line-height: 1.55;
+      color: #9d174d;
+    }
+    .celebration-card strong {
+      color: #831843;
+      font-size: 16.5px;
+    }
+
+    /* גריד קוביות מידע */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 18px 20px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title.blue { color: #0284c7; }
+    .card-title.orange { color: #ea580c; }
+
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .bullet-list li {
+      font-size: 16px;
+      line-height: 1.55;
+      position: relative;
+      padding-right: 16px;
+      color: #334155;
+    }
+    .bullet-list li::before {
+      content: "•";
+      position: absolute;
+      right: 0;
+      font-weight: 800;
+      font-size: 18px;
+      color: #0284c7;
+    }
+    .bullet-list strong {
+      color: #0f172a;
+    }
+
+    .signature-card {
+      text-align: center;
+      padding: 16px;
+      background: #e0f2fe;
+      border-radius: 14px;
+      font-size: 17.5px;
+      font-weight: 800;
+      color: #0369a1;
+      line-height: 1.6;
+    }
+
+    /* התאמה רספונסיבית לנייד */
+    @media (max-width: 600px) {
+      .hero h1 {
+        font-size: 26px;
+      }
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 12px 14px 6px;
+        gap: 6px;
+      }
+      .gallery-item {
+        height: 110px;
+      }
+      .gallery-item:last-child {
+        grid-column: span 2;
+      }
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .content-flow {
+        padding: 10px 14px 20px;
+      }
+      .intro-card {
+        font-size: 16.5px;
+      }
+      .bullet-list li {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="poster">
+    <!-- כותרת ראשית -->
+    <div class="hero">
+      <h1>סיכום שבועי כיתה ד'1 🍎</h1>
+    </div>
+
+    <!-- גלריית 7 תמונות (לחיצות להגדלה) -->
+    <div class="gallery-grid">
+      <div class="gallery-item"><img src="1.jpeg" alt="פעילות 1"></div>
+      <div class="gallery-item"><img src="2.jpeg" alt="פעילות 2"></div>
+      <div class="gallery-item"><img src="3.jpeg" alt="פעילות 3"></div>
+      <div class="gallery-item"><img src="4.jpeg" alt="פעילות 4"></div>
+      <div class="gallery-item"><img src="5.jpeg" alt="פעילות 5"></div>
+      <div class="gallery-item"><img src="6.jpeg" alt="פעילות 6"></div>
+      <div class="gallery-item"><img src="7.jpeg" alt="פעילות 7"></div>
+    </div>
+
+    <div class="content-flow">
+      <!-- פתיח -->
+      <div class="intro-card">
+        שלום לכל ההורים היקרים! עבר עלינו שבוע עשיר בלמידה, היערכות והתרגשות לקראת החגים שבפתח.
+      </div>
+
+      <!-- חוגגים ומתרגשים יחד -->
+      <div class="celebration-card">
+        <div>🎉 <strong>מזל טוב לארי ולעמית:</strong> שחגגו השבוע יום הולדת! מאחלים לכם שנה מלאה בשמחה, חברים והצלחות.</div>
+        <div>💌 <strong>דרישת שלום לדניאל:</strong> ביוזמתם המרגשת של התלמידים, צילמנו ושלחנו לדניאל סרטון קצר עם צרור ברכות חמות לכבוד הלידה.</div>
+      </div>
+
+      <!-- גריד פעילויות והודעות -->
+      <div class="grid-2">
+        <!-- מה עשינו השבוע -->
+        <div class="card">
+          <div class="card-title blue">
+            <span>✨</span>
+            <span>מה עשינו השבוע?</span>
+          </div>
+          <ul class="bullet-list">
+            <li><strong>ברוח החג:</strong> למדנו על סימני ראש השנה והשתתפנו במסדר בוקר חגיגי לרגל חגי תשרי.</li>
+            <li><strong>סדר שכבתי:</strong> ציינו את החג בסדר שכבתי מרגש. תודה ענקית להורים על הכיבוד העשיר ושיתוף הפעולה!</li>
+            <li><strong>פרויקט ניגונים:</strong> נחשפנו לראשונה לפרויקט המוזיקלי והמעשיר. בשבוע הבא יתקיימו מפגשי התאמה, שבסיומם יבחרו התלמידים את כלי הנגינה שבו ירצו להתנסות וללמוד לאורך השנה.</li>
+            <li><strong>חשבון:</strong> ערכנו מבדק חזרה על עובדות לוח הכפל. חשוב להמשיך ולתרגל גם בבית.</li>
+            <li><strong>מוכנות ובטיחות:</strong> קיימנו תרגיל חירום לתרגול מענה ברעידת אדמה וירי טילים.</li>
+          </ul>
+        </div>
+
+        <!-- הודעות ולוח זמנים -->
+        <div class="card">
+          <div class="card-title orange">
+            <span>📢</span>
+            <span>הודעות ולוח זמנים</span>
+          </div>
+          <ul class="bullet-list">
+            <li><strong>אסיפת הורים:</strong> תתקיים ביום שני הקרוב, <strong>14.9 בשעה 18:00</strong>. נוכחותכם חשובה!</li>
+            <li><strong>חופשת ראש השנה:</strong> החזרה לבית הספר תהיה ביום שני שלאחר החג.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- יצירת קשר -->
+      <div class="card" style="border-right: 5px solid #0284c7;">
+        <div class="card-title blue" style="margin-bottom: 8px;">
+          <span>📞</span>
+          <span>יצירת קשר ושעות מענה</span>
+        </div>
+        <ul class="bullet-list">
+          <li><strong>שיחות טלפון:</strong> בימי הפעילות מתום יום הלימודים ועד השעה 16:00.</li>
+          <li><strong>וואטסאפ:</strong> ניתן לשלוח הודעה תמיד ואחזור אליכם כשאפנה.</li>
+          <li><strong>ימי רביעי:</strong> אינני נוכחת בבית הספר. לנושאים דחופים ניתן לפנות למורה המלמד בכיתה או לכתוב לי ואטפל בזה ביום שלמחרת.</li>
+        </ul>
+      </div>
+
+      <!-- סיום -->
+      <div class="signature-card">
+        שנה טובה, סוף שבוע נעים ושנת לימודים מוצלחת! 🍯🍏<br>
+        שלכם, סיון
+      </div>
+    </div>
+  </div>
+
+  <!-- חלון הגדלת תמונה -->
+  <div class="modal" id="imageModal">
+    <span class="close-btn" id="closeModal">&times;</span>
+    <img class="modal-content" id="modalImage" alt="תמונה מוגדלת">
+  </div>
+
+  <script>
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const closeBtn = document.getElementById('closeModal');
+    const galleryItems = document.querySelectorAll('.gallery-item img');
+
+    galleryItems.forEach(img => {
+      img.addEventListener('click', (e) => {
+        e.stopPropagation();
+        modalImg.src = img.src;
+        modal.classList.add('active');
+      });
+    });
+
+    modal.addEventListener('click', () => {
+      modal.classList.remove('active');
+    });
+
+    closeBtn.addEventListener('click', () => {
+      modal.classList.remove('active');
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        modal.classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>
