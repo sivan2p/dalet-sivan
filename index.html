@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>עדכונים שבועיים - כיתה ד'1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #f1f5f9;
+      font-family: 'Assistant', sans-serif;
+      color: #1e293b;
+      padding: 20px 10px 40px;
+    }
+    .page {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .latest-frame-wrap {
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+    }
+    iframe {
+      display: block;
+      width: 100%;
+      border: 0;
+      background: #ffffff;
+    }
+    .status {
+      text-align: center;
+      padding: 40px 10px;
+      color: #64748b;
+      font-size: 15px;
+    }
+    .archive {
+      margin-top: 24px;
+      background: #ffffff;
+      border-radius: 18px;
+      border: 1px solid #e2e8f0;
+      padding: 16px 20px;
+    }
+    .archive h2 {
+      font-size: 16px;
+      color: #0369a1;
+      margin-bottom: 10px;
+    }
+    .archive ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .archive li a {
+      display: inline-block;
+      text-decoration: none;
+      color: #0284c7;
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .archive li a:hover {
+      background: #e0f2fe;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page">
+    <div class="latest-frame-wrap">
+      <div class="status" id="status">טוען עדכון אחרון...</div>
+      <iframe id="latestFrame" hidden></iframe>
+    </div>
+
+    <div class="archive" id="archiveSection" hidden>
+      <h2>ארכיון עדכונים קודמים</h2>
+      <ul id="archiveList"></ul>
+    </div>
+  </div>
+
+  <script>
+    async function weekExists(n) {
+      try {
+        const res = await fetch(`week${n}/week${n}.html`, { method: 'HEAD', cache: 'no-store' });
+        return res.ok;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    async function findLatestWeek() {
+      let latest = 0;
+      let n = 1;
+      while (await weekExists(n)) {
+        latest = n;
+        n++;
+      }
+      return latest;
+    }
+
+    (async function init() {
+      const latest = await findLatestWeek();
+      const statusEl = document.getElementById('status');
+
+      if (latest === 0) {
+        statusEl.textContent = 'עדיין לא הועלה אף עדכון שבועי.';
+        return;
+      }
+
+      const frame = document.getElementById('latestFrame');
+      frame.addEventListener('load', () => {
+        statusEl.hidden = true;
+        frame.hidden = false;
+        try {
+          frame.style.height = frame.contentWindow.document.documentElement.scrollHeight + 'px';
+        } catch (e) {
+          frame.style.height = '1400px';
+        }
+      });
+      frame.src = `week${latest}/week${latest}.html`;
+
+      if (latest > 1) {
+        const list = document.getElementById('archiveList');
+        for (let i = latest - 1; i >= 1; i--) {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = `week${i}/week${i}.html`;
+          a.textContent = `שבוע ${i}`;
+          li.appendChild(a);
+          list.appendChild(li);
+        }
+        document.getElementById('archiveSection').hidden = false;
+      }
+    })();
+  </script>
+
+</body>
+</html>
