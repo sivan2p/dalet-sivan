@@ -115,6 +115,8 @@
         return;
       }
 
+      document.title = `סיכום שבועי ד'1 - שבוע ${latest}`;
+
       const frame = document.getElementById('latestFrame');
       frame.addEventListener('load', () => {
         statusEl.hidden = true;
