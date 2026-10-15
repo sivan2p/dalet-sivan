@@ -9,138 +9,482 @@
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
     body {
       background-color: #f1f5f9;
       font-family: 'Assistant', sans-serif;
       color: #1e293b;
-      padding: 20px 10px 40px;
     }
-    .page {
-      max-width: 760px;
+
+    /* פס בחירת שבוע (נשאר למעלה בזמן גלילה) */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(241, 245, 249, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .topbar-inner {
+      max-width: 780px;
       margin: 0 auto;
+      padding: 10px 10px 8px;
     }
-    .latest-frame-wrap {
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-      border: 1px solid #e2e8f0;
+    .topbar-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #64748b;
+      padding: 0 4px 6px;
+    }
+    .week-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 2px 4px 4px;
+      scroll-padding: 0 16px;
+    }
+    .week-tabs::-webkit-scrollbar { display: none; }
+    .week-tab {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1px;
+      text-decoration: none;
       background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 7px 14px;
+      color: #0369a1;
+      min-height: 44px;
+      justify-content: center;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .week-tab:hover { background: #f0f9ff; border-color: #7dd3fc; }
+    .week-tab .wk {
+      font-size: 15px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .week-tab .lbl {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #64748b;
+      white-space: nowrap;
+    }
+    .week-tab .new {
+      font-size: 11px;
+      font-weight: 800;
+      color: #ffffff;
+      background: #ea580c;
+      border-radius: 999px;
+      padding: 1px 7px;
+    }
+    .week-tab[aria-current="page"] {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      border-color: #0369a1;
+      color: #ffffff;
+    }
+    .week-tab[aria-current="page"] .lbl { color: #e0f2fe; }
+    .week-tab:focus-visible,
+    .pager a:focus-visible,
+    .old-week a:focus-visible,
+    .lb-btn:focus-visible {
+      outline: 3px solid #f59e0b;
+      outline-offset: 2px;
+    }
+
+    .page {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 6px 0 40px;
+    }
+
+    /* הודעה כשצופים בשבוע ישן */
+    .old-week {
+      margin: 10px 10px 0;
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      border-radius: 14px;
+      padding: 10px 16px;
+      font-size: 15px;
+      color: #92400e;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px 12px;
+    }
+    .old-week a {
+      color: #b45309;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .old-week a:hover { text-decoration: underline; }
+
+    .status {
+      text-align: center;
+      padding: 60px 10px;
+      color: #64748b;
+      font-size: 15px;
     }
     iframe {
       display: block;
       width: 100%;
       border: 0;
-      background: #ffffff;
+      background: transparent;
+      transition: opacity 0.2s ease;
     }
-    .status {
-      text-align: center;
-      padding: 40px 10px;
-      color: #64748b;
-      font-size: 15px;
+    iframe.loading { opacity: 0.35; }
+
+    /* ניווט שבוע קודם / הבא */
+    .pager {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 4px 10px 0;
     }
-    .archive {
-      margin-top: 24px;
-      background: #ffffff;
-      border-radius: 18px;
-      border: 1px solid #e2e8f0;
-      padding: 16px 20px;
-    }
-    .archive h2 {
-      font-size: 16px;
-      color: #0369a1;
-      margin-bottom: 10px;
-    }
-    .archive ul {
-      list-style: none;
+    .pager a {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .archive li a {
-      display: inline-block;
+      flex-direction: column;
+      gap: 2px;
       text-decoration: none;
-      color: #0284c7;
-      background: #f0f9ff;
-      border: 1px solid #bae6fd;
-      border-radius: 10px;
-      padding: 8px 14px;
-      font-size: 14px;
-      font-weight: 600;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 12px 16px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+      transition: border-color 0.15s, background 0.15s;
     }
-    .archive li a:hover {
-      background: #e0f2fe;
+    .pager a:hover { border-color: #7dd3fc; background: #f0f9ff; }
+    .pager .dir { font-size: 13px; font-weight: 700; color: #64748b; }
+    .pager .tgt { font-size: 16px; font-weight: 800; color: #0369a1; }
+    .pager .next { text-align: left; align-items: flex-end; grid-column: 2; }
+    .pager .prev { grid-column: 1; }
+
+    /* חלון הגדלת תמונה */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.92);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 56px 12px 64px;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 12px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+      object-fit: contain;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .lb-btn {
+      position: absolute;
+      background: rgba(255,255,255,0.14);
+      color: #ffffff;
+      border: 0;
+      border-radius: 999px;
+      width: 48px;
+      height: 48px;
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .lb-btn:hover { background: rgba(255,255,255,0.26); }
+    .lb-close { top: 12px; left: 12px; }
+    .lb-prev { right: 12px; top: 50%; transform: translateY(-50%); }
+    .lb-next { left: 12px; top: 50%; transform: translateY(-50%); }
+    .lb-count {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: #e2e8f0;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 600px) {
+      .pager .tgt { font-size: 15px; }
+      .lb-prev, .lb-next { top: auto; bottom: 8px; transform: none; }
     }
   </style>
 </head>
 <body>
 
-  <div class="page">
-    <div class="latest-frame-wrap">
-      <div class="status" id="status">טוען עדכון אחרון...</div>
-      <iframe id="latestFrame" hidden></iframe>
+  <header class="topbar" id="topbar" hidden>
+    <div class="topbar-inner">
+      <div class="topbar-title">סיכומים שבועיים · כיתה ד'1</div>
+      <nav class="week-tabs" id="weekTabs" aria-label="בחירת שבוע"></nav>
     </div>
+  </header>
 
-    <div class="archive" id="archiveSection" hidden>
-      <h2>ארכיון עדכונים קודמים</h2>
-      <ul id="archiveList"></ul>
-    </div>
+  <main class="page">
+    <div class="old-week" id="oldWeek" hidden></div>
+    <div class="status" id="status">טוען עדכון אחרון...</div>
+    <iframe id="weekFrame" hidden></iframe>
+    <nav class="pager" id="pager" aria-label="מעבר בין שבועות" hidden></nav>
+  </main>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="תמונה מוגדלת">
+    <img id="lbImg" alt="">
+    <button class="lb-btn lb-close" id="lbClose" aria-label="סגירה">&times;</button>
+    <button class="lb-btn lb-prev" id="lbPrev" aria-label="התמונה הקודמת">&#8250;</button>
+    <button class="lb-btn lb-next" id="lbNext" aria-label="התמונה הבאה">&#8249;</button>
+    <div class="lb-count" id="lbCount"></div>
   </div>
 
   <script>
-    async function weekExists(n) {
+    // כל שבוע נמצא ב-weekN/weekN.html. השבועות מזוהים אוטומטית (עד לשבוע הראשון שחסר),
+    // ותווית קצרה לכל שבוע נלקחת מ-<meta name="week-label"> בדף השבוע, אם קיימת.
+    const BATCH = 6;
+    let weeks = [];
+    let current = 0;
+
+    async function probeWeek(n) {
       try {
-        const res = await fetch(`week${n}/week${n}.html`, { method: 'HEAD', cache: 'no-store' });
-        return res.ok;
+        const res = await fetch(`week${n}/week${n}.html`, { cache: 'no-cache' });
+        if (!res.ok) return null;
+        const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
+        const meta = doc.querySelector('meta[name="week-label"]');
+        return { n, label: meta ? meta.content.trim() : '' };
       } catch (e) {
-        return false;
+        return null;
       }
     }
 
-    async function findLatestWeek() {
-      let latest = 0;
-      let n = 1;
-      while (await weekExists(n)) {
-        latest = n;
-        n++;
+    async function discoverWeeks() {
+      const found = [];
+      for (let start = 1; ; start += BATCH) {
+        const batch = await Promise.all(
+          Array.from({ length: BATCH }, (_, i) => probeWeek(start + i))
+        );
+        for (const w of batch) {
+          if (!w) return found;
+          found.push(w);
+        }
       }
-      return latest;
     }
+
+    const latest = () => weeks[weeks.length - 1].n;
+    const byNum = (n) => weeks.find(w => w.n === n);
+    const weekName = (w) => `שבוע ${w.n}` + (w.label ? ` · ${w.label}` : '');
+
+    function weekFromHash() {
+      const m = location.hash.match(/^#week-(\d+)$/);
+      const n = m ? parseInt(m[1], 10) : 0;
+      return byNum(n) ? n : latest();
+    }
+
+    function renderTabs() {
+      const nav = document.getElementById('weekTabs');
+      nav.innerHTML = '';
+      for (let i = weeks.length - 1; i >= 0; i--) {
+        const w = weeks[i];
+        const a = document.createElement('a');
+        a.className = 'week-tab';
+        a.href = `#week-${w.n}`;
+        a.dataset.week = w.n;
+        const wk = document.createElement('span');
+        wk.className = 'wk';
+        wk.textContent = `שבוע ${w.n}`;
+        if (w.n === latest()) {
+          const badge = document.createElement('span');
+          badge.className = 'new';
+          badge.textContent = 'חדש';
+          wk.appendChild(badge);
+        }
+        a.appendChild(wk);
+        if (w.label) {
+          const lbl = document.createElement('span');
+          lbl.className = 'lbl';
+          lbl.textContent = w.label;
+          a.appendChild(lbl);
+        }
+        nav.appendChild(a);
+      }
+      document.getElementById('topbar').hidden = false;
+    }
+
+    function pagerLink(w, cls, dirText) {
+      const a = document.createElement('a');
+      a.className = cls;
+      a.href = `#week-${w.n}`;
+      const dir = document.createElement('span');
+      dir.className = 'dir';
+      dir.textContent = dirText;
+      const tgt = document.createElement('span');
+      tgt.className = 'tgt';
+      tgt.textContent = weekName(w);
+      a.append(dir, tgt);
+      return a;
+    }
+
+    function renderChrome() {
+      document.querySelectorAll('.week-tab').forEach(a => {
+        if (+a.dataset.week === current) {
+          a.setAttribute('aria-current', 'page');
+          a.scrollIntoView({ block: 'nearest', inline: 'center' });
+        } else {
+          a.removeAttribute('aria-current');
+        }
+      });
+
+      const oldWeek = document.getElementById('oldWeek');
+      oldWeek.innerHTML = '';
+      if (current !== latest()) {
+        const txt = document.createElement('span');
+        txt.textContent = `אתם צופים בסיכום ישן – ${weekName(byNum(current))}`;
+        const a = document.createElement('a');
+        a.href = `#week-${latest()}`;
+        a.textContent = 'לסיכום האחרון ←';
+        oldWeek.append(txt, a);
+        oldWeek.hidden = false;
+      } else {
+        oldWeek.hidden = true;
+      }
+
+      const pager = document.getElementById('pager');
+      pager.innerHTML = '';
+      const prev = byNum(current - 1);
+      const next = byNum(current + 1);
+      if (prev) pager.appendChild(pagerLink(prev, 'prev', '→ השבוע הקודם'));
+      if (next) pager.appendChild(pagerLink(next, 'next', 'השבוע הבא ←'));
+      pager.hidden = !prev && !next;
+
+      document.title = `סיכום שבועי ד'1 - שבוע ${current}`;
+    }
+
+    // ---- התאמת גובה המסגרת לתוכן השבוע ----
+    let resizeObs = null;
+    function fitFrame(frame) {
+      const doc = frame.contentDocument;
+      // גובה התוכן עצמו (body), ולא scrollHeight שלא קטן מתחת לגובה המסגרת הנוכחי
+      const fit = () => { frame.style.height = Math.ceil(doc.body.getBoundingClientRect().height) + 'px'; };
+      fit();
+      if (resizeObs) resizeObs.disconnect();
+      if ('ResizeObserver' in window) {
+        resizeObs = new ResizeObserver(fit);
+        resizeObs.observe(doc.body);
+      }
+    }
+
+    // ---- הגדלת תמונות: נפתחת על המסך, לא באמצע המסגרת הארוכה ----
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    let lbList = [];
+    let lbIndex = 0;
+    let lbReturnFocus = null;
+
+    function lbShow(i) {
+      lbIndex = (i + lbList.length) % lbList.length;
+      lbImg.src = lbList[lbIndex].src;
+      lbImg.alt = lbList[lbIndex].alt;
+      document.getElementById('lbCount').textContent = `${lbIndex + 1} מתוך ${lbList.length}`;
+      const multi = lbList.length > 1;
+      document.getElementById('lbPrev').hidden = !multi;
+      document.getElementById('lbNext').hidden = !multi;
+    }
+    function lbOpen(list, i) {
+      lbList = list;
+      lbReturnFocus = document.activeElement;
+      lbShow(i);
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      document.getElementById('lbClose').focus();
+    }
+    function lbClose() {
+      if (!lb.classList.contains('open')) return;
+      lb.classList.remove('open');
+      document.body.style.overflow = '';
+      if (lbReturnFocus && lbReturnFocus.focus) lbReturnFocus.focus();
+    }
+    document.getElementById('lbClose').addEventListener('click', lbClose);
+    document.getElementById('lbPrev').addEventListener('click', (e) => { e.stopPropagation(); lbShow(lbIndex - 1); });
+    document.getElementById('lbNext').addEventListener('click', (e) => { e.stopPropagation(); lbShow(lbIndex + 1); });
+    lb.addEventListener('click', (e) => { if (e.target === lb) lbClose(); });
+    document.addEventListener('keydown', (e) => {
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape') lbClose();
+      else if (e.key === 'ArrowLeft') lbShow(lbIndex + 1);   // RTL: שמאלה = הבאה
+      else if (e.key === 'ArrowRight') lbShow(lbIndex - 1);
+    });
+    let touchX = null;
+    lb.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', (e) => {
+      if (touchX === null) return;
+      const dx = e.changedTouches[0].clientX - touchX;
+      touchX = null;
+      if (Math.abs(dx) < 40 || lbList.length < 2) return;
+      lbShow(dx > 0 ? lbIndex + 1 : lbIndex - 1);       // RTL: החלקה ימינה = הבאה
+    });
+
+    function hookGallery(frame) {
+      const doc = frame.contentDocument;
+      const style = doc.createElement('style');
+      style.textContent = '.gallery-item { cursor: zoom-in; }';
+      doc.head.appendChild(style);
+      // בשלב ה-capture, לפני חלון ההגדלה של הדף עצמו
+      doc.addEventListener('click', (e) => {
+        const item = e.target.closest('.gallery-item');
+        if (!item) return;
+        e.stopPropagation();
+        e.preventDefault();
+        const imgs = [...doc.querySelectorAll('.gallery-item img')];
+        const img = item.querySelector('img');
+        lbOpen(imgs.map(im => ({ src: im.src, alt: im.alt })), Math.max(0, imgs.indexOf(img)));
+      }, true);
+    }
+
+    // ---- טעינת שבוע ----
+    const frame = document.getElementById('weekFrame');
+    const statusEl = document.getElementById('status');
+
+    frame.addEventListener('load', () => {
+      statusEl.hidden = true;
+      frame.hidden = false;
+      frame.classList.remove('loading');
+      try {
+        fitFrame(frame);
+        hookGallery(frame);
+      } catch (e) {
+        frame.style.height = '1600px';
+      }
+    });
+
+    function showWeek(scroll) {
+      const n = weekFromHash();
+      if (n === current) return;
+      current = n;
+      renderChrome();
+      frame.title = `סיכום שבוע ${n}`;
+      if (!frame.hidden) frame.classList.add('loading');
+      frame.contentWindow.location.replace(new URL(`week${n}/week${n}.html`, location.href).href);
+      if (scroll) window.scrollTo(0, 0);
+    }
+
+    window.addEventListener('hashchange', () => { lbClose(); showWeek(true); });
 
     (async function init() {
-      const latest = await findLatestWeek();
-      const statusEl = document.getElementById('status');
-
-      if (latest === 0) {
+      weeks = await discoverWeeks();
+      if (weeks.length === 0) {
         statusEl.textContent = 'עדיין לא הועלה אף עדכון שבועי.';
         return;
       }
-
-      document.title = `סיכום שבועי ד'1 - שבוע ${latest}`;
-
-      const frame = document.getElementById('latestFrame');
-      frame.addEventListener('load', () => {
-        statusEl.hidden = true;
-        frame.hidden = false;
-        try {
-          frame.style.height = frame.contentWindow.document.documentElement.scrollHeight + 'px';
-        } catch (e) {
-          frame.style.height = '1400px';
-        }
-      });
-      frame.src = `week${latest}/week${latest}.html`;
-
-      if (latest > 1) {
-        const list = document.getElementById('archiveList');
-        for (let i = latest - 1; i >= 1; i--) {
-          const li = document.createElement('li');
-          const a = document.createElement('a');
-          a.href = `week${i}/week${i}.html`;
-          a.textContent = `שבוע ${i}`;
-          li.appendChild(a);
-          list.appendChild(li);
-        }
-        document.getElementById('archiveSection').hidden = false;
-      }
+      renderTabs();
+      showWeek(false);
     })();
   </script>
 
