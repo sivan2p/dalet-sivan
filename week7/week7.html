@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>סיכום שבועי ד'1 - שבוע 7</title>
+  <meta name="week-label" content="בחירות ודמוקרטיה">
+  <!-- נפתח תמיד בתוך דף הבית, כדי שהניווט בין השבועות יופיע -->
+  <script>if (window.self === window.top) location.replace('../#week-7');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #f1f5f9;
+      font-family: 'Assistant', sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 20px 10px;
+      color: #1e293b;
+    }
+
+    .poster {
+      background: #ffffff;
+      width: 100%;
+      max-width: 760px;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+    }
+
+    /* כותרת עליונה */
+    .hero {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: white;
+      text-align: center;
+      padding: 28px 18px;
+    }
+    .hero h1 {
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    /* גלריית 3 תמונות */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 18px 20px 10px;
+    }
+    .gallery-item {
+      height: 160px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      border: 2px solid #ffffff;
+      background: #e2e8f0;
+      cursor: pointer;
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.25s ease;
+    }
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
+
+    /* חלון הגדלת תמונה (Lightbox) */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.88);
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      backdrop-filter: blur(4px);
+      cursor: pointer;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 14px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+      object-fit: contain;
+      cursor: default;
+    }
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 34px;
+      color: white;
+      cursor: pointer;
+      font-weight: 800;
+      line-height: 1;
+      user-select: none;
+    }
+
+    /* גוף התוכן */
+    .content-flow {
+      padding: 12px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .intro-card {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 16px 20px;
+      border: 1px solid #e2e8f0;
+      border-right: 5px solid #0284c7;
+      font-size: 17px;
+      line-height: 1.6;
+      color: #334155;
+    }
+
+    /* קוביות מידע */
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 18px 20px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title.blue { color: #0284c7; }
+    .card-title.orange { color: #ea580c; }
+
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .bullet-list li {
+      font-size: 16px;
+      line-height: 1.55;
+      position: relative;
+      padding-right: 18px;
+      color: #334155;
+    }
+    .bullet-list li::before {
+      content: "•";
+      position: absolute;
+      right: 0;
+      font-weight: 800;
+      font-size: 18px;
+      color: #0284c7;
+    }
+    .card-title.orange + .bullet-list li::before {
+      color: #ea580c;
+    }
+    .bullet-list strong { color: #0f172a; }
+
+    .signature-card {
+      text-align: center;
+      padding: 16px;
+      background: #e0f2fe;
+      border-radius: 14px;
+      font-size: 17.5px;
+      font-weight: 800;
+      color: #0369a1;
+      line-height: 1.6;
+    }
+
+    /* תיבת ארכיון */
+    .archive-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 14px 18px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .archive-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #64748b;
+    }
+    .archive-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+    .archive-btn {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      color: #0284c7;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .archive-btn:hover {
+      background: #0284c7;
+      color: white;
+      border-color: #0284c7;
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 26px; }
+      .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+        padding: 12px 14px 6px;
+        gap: 6px;
+      }
+      .gallery-item { height: 110px; }
+      .content-flow { padding: 10px 14px 20px; }
+      .intro-card { font-size: 16.5px; }
+      .bullet-list li { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="poster">
+    <!-- כותרת ראשית -->
+    <div class="hero">
+      <h1>סיכום שבועי כיתה ד'1 🛹🗳️🎶</h1>
+    </div>
+
+    <!-- גלריית 3 תמונות (לחיצות להגדלה) -->
+    <div class="gallery-grid">
+      <div class="gallery-item"><img src="1.jpeg" alt="התלמידים במשחק הדילמות ״זה או זה״ - בוחרים צד ומשכנעים"></div>
+      <div class="gallery-item"><img src="2.jpeg" alt="משחק הדילמות ״זה או זה״ בחצר"></div>
+      <div class="gallery-item"><img src="3.jpeg" alt="משחק ״מרוץ שרשרת״ בקבוצות במגרש"></div>
+    </div>
+
+    <div class="content-flow">
+      <!-- פתיח -->
+      <div class="intro-card">
+        שלום לכל ההורים היקרים, עבר עלינו שבוע פעיל, מגוון ומלא בעשייה – שילוב של למידה משמעותית, מיומנויות דיגיטליות, שיח אזרחי-דמוקרטי מרתק והעמקה מוזיקלית.
+      </div>
+
+      <!-- מה עשינו ולמדנו השבוע -->
+      <div class="card">
+        <div class="card-title blue">
+          <span>✨</span>
+          <span>מה עשינו ולמדנו השבוע?</span>
+        </div>
+        <ul class="bullet-list">
+          <li><strong>אנגלית:</strong> נבחנו בבחינה באנגלית – התלמידים ניגשו אליה ברצינות ועברו אותה כמו אלופים אמיתיים! כל הכבוד להם.</li>
+          <li><strong>שפה:</strong> למדנו על הספורטאית שני פז, אלופת הארץ בסקייטבורד. קראנו ראיון אישי שנערך עמה, עברנו על תעודת הזהות הספורטיבית שלה ונעמיק בנושא עוד בשבוע הבא.</li>
+          <li><strong>מחשבים ומיומנויות חירום (Google Classroom):</strong> תרגלנו כניסה והתחברות עצמאית לכיתה הווירטואלית שלנו בקלאסרום, וביצענו משימה מקוונת של הכנת תעודת זהות לספורטאי. זוהי מיומנות חיונית וחשובה שתשמש אותנו גם בשגרה וגם בשעת חירום – אנא ודאו שילדכם מכיר וזוכר את פרטי ההזדהות האחידה שלו (מי שצריך תזכורת או סיוע עם הסיסמה, כתבו לי ואשלח בשמחה).</li>
+          <li><strong>שיעור חווייתי על דמוקרטיה ובחירות:</strong> לרגל יום הבחירות קיימנו פעילות כיתתית מיוחדת. התחלנו במשחק דילמות "זה או זה" שבו התלמידים בחרו עמדה וניסו לשכנע את חבריהם לשנות את דעתם. משם המשכנו לשיח מעמיק על תהליך הבחירות בישראל, קמפיינים, דרכי שכנוע, וביררנו יחד מהי דמוקרטיה, היכן יש לנו כוח בחירה אמיתי בחיים ובבית הספר, ומתי הבחירה נכפית עלינו. תודה ויישר כוח לכל ההורים ששיתפו את הילדים בחוויית ההצבעה בקלפי במהלך יום השבתון – לא מעט תלמידים שיתפו זאת כחוויה משמעותית עבורם!</li>
+          <li><strong>פרויקט "ניגונים":</strong> עוד שבוע מוצלח שבו התלמידים מראים מוטיבציה והתלהבות רבה מכלי הנגינה. חשוב לזכור: הלמידה מתקיימת בקבוצות מעורבות שכבתיות, מה שמזמן מפגש חברתי רחב, לצד הזדמנות אישית למחויבות, משמעת ולמידה עצמאית בליווי מורה צמוד למוזיקה. אנא שוחחו עם הילדים, אפשרו להם לשתף בחוויות ועודדו אותם בהתקדמותם האישית – טבעי שאל מול כלי חדש יצוצו אתגרים, והתפקיד שלנו הוא לחזק אותם לתת צ'אנס ולא להתייאש.</li>
+          <li><strong>סיכום שבועי וגיבוש:</strong> בשיעור האחרון לשבוע נערך סיכום שבועי בהובלת איתי, והשבוע יצאו התלמידים למגרש למשחק מגבש בקבוצות "מרוץ שרשרת".</li>
+        </ul>
+      </div>
+
+      <!-- עדכונים ותזכורות -->
+      <div class="card" style="border-right: 5px solid #ea580c;">
+        <div class="card-title orange">
+          <span>📢</span>
+          <span>עדכונים ותזכורות</span>
+        </div>
+        <ul class="bullet-list">
+          <li><strong>החזרת מבחנים במתמטיקה:</strong> התלמידים קיבלו השבוע בחזרה את המבחנים במתמטיקה עם הערכה וציון מילולי. חשוב מאוד לערוך עם הילדים שיח מעצים בבית, לבחון יחד את מצבם הלימודי, ולסייע בתרגול נוסף במידת הצורך. אנחנו כאן תמיד כדי ללוות ולסייע – אתם מוזמנים לפנות בכל שאלה או צורך אליי ואל איתי.</li>
+          <li><strong>ועד הורים כיתתי:</strong> אני עדיין מחפשת נציגים לוועד הכיתה. אנא התנדבו כדי שגם הכיתה שלנו תיקח חלק פעיל בעיצוב ימי השיא והאירועים השכבתיים למען הילדים.</li>
+        </ul>
+      </div>
+
+      <!-- יצירת קשר ושעות מענה -->
+      <div class="card" style="border-right: 5px solid #0284c7;">
+        <div class="card-title blue" style="margin-bottom: 8px;">
+          <span>📞</span>
+          <span>יצירת קשר ושעות מענה</span>
+        </div>
+        <ul class="bullet-list">
+          <li><strong>שיחות טלפון:</strong> בימי הפעילות מתום יום הלימודים ועד השעה 16:00.</li>
+          <li><strong>וואטסאפ:</strong> ניתן לשלוח הודעה תמיד ואחזור אליכם כשאפנה.</li>
+          <li><strong>ימי רביעי:</strong> אינני נוכחת בבית הספר. לנושאים דחופים ניתן לפנות למורה המלמד בכיתה או לכתוב לי ואטפל בכך למחרת.</li>
+        </ul>
+      </div>
+
+      <!-- חתימה -->
+      <div class="signature-card">
+        שיהיה לכולנו סוף שבוע נעים, רגוע ושבת שלום! 🌿✨<br>
+        שלכם, סיון
+      </div>
+
+    </div>
+  </div>
+
+  <!-- חלון הגדלת תמונה (Lightbox) -->
+  <div class="modal" id="imageModal">
+    <span class="close-btn" id="closeModal">&times;</span>
+    <img class="modal-content" id="modalImage" alt="תמונה מוגדלת">
+  </div>
+
+  <script>
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const closeBtn = document.getElementById('closeModal');
+    const galleryItems = document.querySelectorAll('.gallery-item img');
+
+    galleryItems.forEach(img => {
+      img.addEventListener('click', (e) => {
+        e.stopPropagation();
+        modalImg.src = img.src;
+        modal.classList.add('active');
+      });
+    });
+
+    modal.addEventListener('click', () => modal.classList.remove('active'));
+    closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') modal.classList.remove('active');
+    });
+  </script>
+</body>
+</html>
